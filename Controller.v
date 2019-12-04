@@ -20,7 +20,7 @@ module controller (
   else if(muxout == 4'b01){
       next_state = micro_instructions[33:30];
   }
-  else if(muxout == 4'b01){
+  else if(muxout == 4'b10){
       next_state = micro_instructions[29:26];
   }
   else{
