@@ -12,8 +12,8 @@ module controller (
   controllerROM rom(state, micro_instructions);
   
   //2_1 multiplexer with alpha, beta. output is muxouts each bit
-  multiplexer_2_1 mux1(micro_instructions[39] ,wait_, AC15, muxout[0]);
-  multiplexer_2_1 mux2(micro_instructions[38] ,IR15, IR14, muxout[1]);
+  multiplexer_2_1 mux1(micro_instructions[39] ,wait_, AC15, muxout[1]);
+  multiplexer_2_1 mux2(micro_instructions[38] ,IR15, IR14, muxout[0]);
   multiplexer_4_1 mux3(muxout[0], muxout[1], micro_instructions[37:34], micro_instructions[33:30], micro_instructions[29:26], micro_instructions[25:22], next_state);
 
   //4_1 multiplexer with muxout, A0, A1, A2, A3. output is next_state
