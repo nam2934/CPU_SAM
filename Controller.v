@@ -11,6 +11,8 @@ module controller (
 
   controllerROM rom(state, micro_instructions);
 
+  
+
   always @ (posedge clk) state = next_state;
 
   // TODO: write codes to implement controller in lecture note, page 59
