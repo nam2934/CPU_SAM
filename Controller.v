@@ -13,20 +13,9 @@ module controller (
   //2_1 multiplexer with alpha, beta. output is muxouts each bit
   multiplexer_2_1 mux1(micro_instructions[39] ,wait_, AC15, muxout[0]);
   multiplexer_2_1 mux2(micro_instructions[38] ,IR15, IR14, muxout[1]);
+  multiplexer_4_1 mux3(muxout[0], muxout[1], micro_instructions[37:34], micro_instructions[33:30], micro_instructions[29:26], micro_instructions[25:22], next_state);
 
-  if(muxout == 4'b00){
-      next_state = micro_instructions[37:34];
-  }
-  else if(muxout == 4'b01){
-      next_state = micro_instructions[33:30];
-  }
-  else if(muxout == 4'b10){
-      next_state = micro_instructions[29:26];
-  }
-  else{
-      next_state = micro_instructions[25:22];
-  }
-
+  bus_controller = micro_instructions[21:0];
   always @ (posedge clk) state = next_state;
 
   // TODO: write codes to implement controller in lecture note, page 59
