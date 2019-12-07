@@ -10,13 +10,15 @@ endmodule
 
 module multiplexer_2_1_reg(
   input a,
-  input i_0,
-  input i_1,
-  output reg o
+  input [3:0] i_0,
+  input [3:0] i_1,
+  output reg [3:0] o
 );
-  reg t1, t2;
+  reg [3:0] t1, t2;
   
-  t1 = ~a & i_0;
-  t2 = a & i_1;
-  o = t1 | t2;
+  always begin
+    t1 = ~a & i_0;
+    t2 = a & i_1;
+    o = t1 | t2;
+  end
 endmodule
