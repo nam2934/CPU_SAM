@@ -7,7 +7,7 @@ module controller (
   wire [1:0] muxout;
 
   reg [3:0] state;
-  wire [3:0] next_state;
+  reg [3:0] next_state;
 
   controllerROM rom(state, micro_instructions);
   
@@ -18,7 +18,7 @@ module controller (
 
   //4_1 multiplexer with muxout, A0, A1, A2, A3. output is next_state
   assign bus_controller = micro_instructions[21:0];
-  always @ (posedge clk) state <= next_state;
+  always @ (posedge clk) state = next_state;
 
   // TODO: write codes to implement controller in lecture note, page 59
   initial begin
