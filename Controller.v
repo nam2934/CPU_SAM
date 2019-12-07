@@ -17,7 +17,7 @@ module controller (
   multiplexer_4_1 mux3(muxout[0], muxout[1], micro_instructions[37:34], micro_instructions[33:30], micro_instructions[29:26], micro_instructions[25:22], next_state);
 
   //4_1 multiplexer with muxout, A0, A1, A2, A3. output is next_state
-  bus_controller = micro_instructions[21:0];
+  assign bus_controller = micro_instructions[21:0];
   always @ (posedge clk) state = next_state;
 
   // TODO: write codes to implement controller in lecture note, page 59
