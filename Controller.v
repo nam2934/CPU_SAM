@@ -7,7 +7,7 @@ module controller (
   wire [1:0] muxout;
 
   reg [3:0] state;
-  reg [3:0] next_state;
+  wire [3:0] next_state;
 
   controllerROM rom(state, micro_instructions);
   
