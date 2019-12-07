@@ -21,7 +21,9 @@ module controller (
   always @ (posedge clk) state <= next_state;
 
   // TODO: write codes to implement controller in lecture note, page 59
-
+  initial begin
+    state = 0;
+  end
 
 
 
