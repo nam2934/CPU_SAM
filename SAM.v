@@ -62,12 +62,12 @@ module SAM();
     ALU_ADD = b[15];
     ALU_PASS_B = b[14];
 
-    // ADDRESS/DATA BUS
+    // BUS
     if (b[13]) ADDRESS_BUS = MAR;
     if (b[12]) DATA_BUS = MBR;
     if (b[11]) IR = ABUS;
     if (b[10]) MAR = ABUS;
-    if (b[9]) MBR = DATA BUS;
+    if (b[9]) MBR = DATA_BUS;
     if (b[8]) MBR = RBUS;
     if (b[7]) MBUS = MBR;
 
