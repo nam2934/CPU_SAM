@@ -48,6 +48,17 @@ module SAM();
     if		(b[19]) ABUS = MBR;
 */
     
+    // Memory
+    RW = b[3];
+    REQUEST = b[2];
+    
+    // ALU
+    if (b[7]) MBUS = MBR;
+    if (b[17]) ALU_A = AC;
+    if (b[16]) ALU_B = MBUS;
+    ALU_ADD = b[15];
+    ALU_PASS_B = b[14];
+    
     // ABUS
     if (b[21]) ABUS = PC;
     if (b[20]) ABUS = IR;
@@ -67,17 +78,6 @@ module SAM();
     if (b[10]) MAR = ABUS;
     if (b[9]) MBR = DATA_BUS;
     if (b[8]) MBR = RBUS;
-    if (b[7]) MBUS = MBR;
-
-    // Memory
-    RW = b[3];
-    REQUEST = b[2];
-    
-    // ALU
-    if (b[17]) ALU_A = AC;
-    if (b[16]) ALU_B = MBUS;
-    ALU_ADD = b[15];
-    ALU_PASS_B = b[14];
     
     // PC
     if (b[6]) PC = 0;
