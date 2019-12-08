@@ -46,19 +46,7 @@ module SAM();
     if		(b[21]) ABUS = PC;
     if		(b[20]) ABUS = IR;
     if		(b[19]) ABUS = MBR;
-*/
-    
-    // Memory
-    RW = b[3];
-    REQUEST = b[2];
-    
-    // ALU
-    if (b[7]) MBUS = MBR;
-    if (b[17]) ALU_A = AC;
-    if (b[16]) ALU_B = MBUS;
-    ALU_ADD = b[15];
-    ALU_PASS_B = b[14];
-    
+*/   
     // ABUS
     if (b[21]) ABUS = PC;
     if (b[20]) ABUS = IR;
@@ -74,11 +62,13 @@ module SAM();
     // BUS
     if (b[13]) ADDRESS_BUS = MAR;
     if (b[12]) DATA_BUS = MBR;
+    RW = b[3];
+    REQUEST = b[2];
     if (b[11]) IR = ABUS;
     if (b[10]) MAR = ABUS;
     if (b[9]) MBR = DATA_BUS;
     if (b[8]) MBR = RBUS;
-    
+
     // PC
     if (b[6]) PC = 0;
     if (b[5]) PC = PC + 2;
@@ -93,6 +83,15 @@ module SAM();
     if (b[19]) ABUS = MBR;
   end
 */
+  always @ (b or AC or MBUS) begin
+    
+    // ALU
+    if (b[7]) MBUS = MBR;
+    if (b[17]) ALU_A = AC;
+    if (b[16]) ALU_B = MBUS;
+    ALU_ADD = b[15];
+    ALU_PASS_B = b[14];
+  end
 
 /* Example 3. wire-based
   assign ABUS = b[21] ? PC : (b[20] ? IR : (b[19] ? MBR : 'bz));
