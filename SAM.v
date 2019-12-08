@@ -52,15 +52,13 @@ module SAM();
     if (b[21]) ABUS = PC;
     if (b[20]) ABUS = IR;
     if (b[19]) ABUS = MBR;
+    
+    // RBUS
+    if (b[1]) RBUS = AC;
+    if (b[0]) RBUS = ALU_RESULT;
 
     // AC
     if (b[18]) AC = RBUS;
-
-    // ALU
-    if (b[17]) ALU_A = AC;
-    if (b[16]) ALU_B = MBUS;
-    ALU_ADD = b[15];
-    ALU_PASS_B = b[14];
 
     // BUS
     if (b[13]) ADDRESS_BUS = MAR;
@@ -71,17 +69,21 @@ module SAM();
     if (b[8]) MBR = RBUS;
     if (b[7]) MBUS = MBR;
 
-    // PC
-    if (b[6]) PC = 16'b0000000000000000;
-    if (b[5]) PC = PC + 2;
-    if (b[4]) PC = ABUS;
-
+    // Memory
     RW = b[3];
     REQUEST = b[2];
-
-    // RBUS
-    if (b[1]) RBUS = AC;
-    if (b[0]) RBUS = ALU_RESULT;
+    
+    // ALU
+    if (b[17]) ALU_A = AC;
+    if (b[16]) ALU_B = MBUS;
+    ALU_ADD = b[15];
+    ALU_PASS_B = b[14];
+    
+    // PC
+    if (b[6]) PC = 0;
+    if (b[5]) PC = PC + 2;
+    if (b[4]) PC = ABUS;
+    
   end
 
 /* Example 2. register without clk
