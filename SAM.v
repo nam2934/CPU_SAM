@@ -66,7 +66,6 @@ module SAM();
     REQUEST = b[2];
     if (b[11]) IR = ABUS;
     if (b[10]) MAR = ABUS;
-    if (b[9]) MBR = DATA_BUS;
     if (b[8]) MBR = RBUS;
 
     // PC
@@ -92,6 +91,8 @@ module SAM();
     ALU_ADD = b[15];
     ALU_PASS_B = b[14];
   end
+
+  always @ (b or DATA_BUS) if (b[9]) MBR = DATA_BUS;
 
 /* Example 3. wire-based
   assign ABUS = b[21] ? PC : (b[20] ? IR : (b[19] ? MBR : 'bz));
