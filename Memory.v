@@ -43,8 +43,8 @@ module Memory(
   always @ ( request or rw or data_bus_write ) begin
     if ( request ) begin
       if ( ~rw ) begin
-        mem[addrs_bus] = data_bus_write[15:8];
-        mem[addrs_bus+1] = data_bus_write[7:0];
+        mem[addrs_bus[13:0]] = data_bus_write[15:8];
+        mem[addrs_bus[13:0]+1] = data_bus_write[7:0];
       end
       wait_ = 0;
     end
