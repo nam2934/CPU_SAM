@@ -1,89 +1,53 @@
 `timescale 1ns/1ps
 
-module SAM();
-  reg clk;
+// Memory module, you don't need to change any code here
+// refer to : lecture note - page 15
+module Memory(
+  input [15:0] addrs_bus,
+  input request,
+  input rw, // 1:read, 0:write
+  output reg wait_,
+  input [15:0] data_bus_write,
+  output [15:0] data_bus_read
+);
+  reg [7:0] mem[0:255];
 
-// TODO: you may alter the type of registers to wire (e.g. reg RW -> wire RW) if necessary
-  reg [15:0] PC;
-  reg [15:0] AC, MAR, MBR, IR;
-  reg [15:0] ABUS, RBUS, MBUS;
-  reg [15:0] ADDRESS_BUS, DATA_BUS;
-  reg RW, REQUEST;
-  wire WAIT;
-
-  reg [15:0] ALU_A, ALU_B;
-  reg ALU_ADD, ALU_PASS_B;
-  reg [15:0] ALU_RESULT;
-
-  wire [21:0] b;
-  controller my_controller(clk, WAIT, IR[15], AC[15], IR[14], b);
-
-  wire [15:0] data_bus_t;
-  always @ ( RW ) if (RW) DATA_BUS = data_bus_t;
-  Memory my_memory(ADDRESS_BUS, REQUEST, RW, WAIT, DATA_BUS, data_bus_t);
-
-  // initial settings
-  // TODO : add any initialization process if required (not necessary)
+  integer i;
   initial begin
-    clk = 0;
-    AC = 0;
-    IR = 0;
-    ADDRESS_BUS = 0;
-    PC = 0;
-    MAR = 0;
-  end
-  always begin
-    clk = ~clk; #1;
-  end
-
-  // ALU implementation
-  always @ (ALU_ADD or ALU_PASS_B or ALU_A or ALU_B )begin
-    if (ALU_ADD) ALU_RESULT = ALU_A + ALU_B;
-    else if (ALU_PASS_B) ALU_RESULT = ALU_B;
-  end
-
-  always @ ( negedge clk ) begin
-    // TODO: refer to lecture note, page 46
-
-    // ABUS
-    if (b[21]) ABUS = PC;
-    if (b[20]) ABUS = IR;
-    if (b[19]) ABUS = MBR;
-    
-    // RBUS
-    if (b[1]) RBUS = AC;
-    if (b[0]) RBUS = ALU_RESULT;
-
-    // AC
-    if (b[18]) AC = RBUS;
-
-    // BUS
-    if (b[13]) ADDRESS_BUS = MAR;
-    if (b[12]) DATA_BUS = MBR;
-    RW = b[3];
-    REQUEST = b[2];
-    if (b[11]) IR = ABUS;
-    if (b[10]) MAR[13:0] = ABUS[13:0];
-    if (b[8]) MBR = RBUS;
-
-    // PC
-    if (b[6]) PC[13:0] = 0;
-    if (b[5]) PC[13:0] = PC[13:0] + 2;
-    if (b[4]) PC[13:0] = ABUS[13:0];
-    
+    /* In this sample testcode, you are expected to have
+         mem[132] = 8'hab
+         mem[133] = 8'hce
+       at 61ns time.
+    */
+    wait_ = 1;
+    for  (i=0;i!=256;i=i+1) mem[i] = 0; // initialize all instructions as 0
+    mem[0] = 8'b00000000; //LD 14'b [00 0000] 1000 0000
+    mem[1] = 8'b10000000; //LD 14'b 00 0000 [1000 0000]
+    mem[2] = 8'b10000000; //ADD 14'b [00 0000] 1000 0010
+    mem[3] = 8'b10000010; //ADD 14'b 00 0000 [1000 0010]
+    mem[4] = 8'b11000000; //BRN 14'b [00 0000] 0000 1000
+    mem[5] = 8'b00001000; //BRN 14'b 00 0000 [0000 1000]
+    mem[8] = 8'b01000000; //ST 14'b [00 0000] 1000 0100
+    mem[9] = 8'b10000100; //ST 14'b 00 0000 [1000 0100]
+    mem[8'b10000000] = 8'hab;
+    mem[8'b10000001] = 8'hcd;
+    mem[8'b10000010] = 8'h00;
+    mem[8'b10000011] = 8'h01;
+    mem[8'b10000100] = 8'h00;
+    mem[8'b10000101] = 8'h00;
   end
 
+  assign data_bus_read[15:8] = (rw) ? mem[addrs_bus[7:0]] : 'bz;
+  assign data_bus_read[7:0] = (rw) ? mem[addrs_bus[7:0]+1] : 'bz;
 
-  always @ (b or AC or MBUS) begin
-    
-    // ALU
-    if (b[7]) MBUS = MBR;
-    if (b[17]) ALU_A = AC;
-    if (b[16]) ALU_B = MBUS;
-    ALU_ADD = b[15];
-    ALU_PASS_B = b[14];
+  always @ ( request or rw or data_bus_write ) begin
+    if ( request ) begin
+      if ( !rw ) begin
+        mem[addrs_bus] = data_bus_write[15:8];
+        mem[addrs_bus+1] = data_bus_write[7:0];
+      end
+      wait_ = 0;
+    end
+    else wait_ = 1;
   end
-
-  always @ (b or DATA_BUS) if (b[9]) MBR = DATA_BUS;
-
 endmodule
