@@ -29,6 +29,8 @@ module SAM();
     AC = 0;
     IR = 0;
     ADDRESS_BUS = 0;
+    PC = 0;
+    MAR = 0;
   end
   always begin
     clk = ~clk; #1;
@@ -42,11 +44,7 @@ module SAM();
 
   always @ ( negedge clk ) begin
     // TODO: refer to lecture note, page 46
-/* Example 1. clk-synchrinized implementation
-    if		(b[21]) ABUS = PC;
-    if		(b[20]) ABUS = IR;
-    if		(b[19]) ABUS = MBR;
-*/   
+
     // ABUS
     if (b[21]) ABUS = PC;
     if (b[20]) ABUS = IR;
@@ -65,23 +63,17 @@ module SAM();
     RW = b[3];
     REQUEST = b[2];
     if (b[11]) IR = ABUS;
-    if (b[10]) MAR = ABUS;
+    if (b[10]) MAR[13:0] = ABUS[13:0];
     if (b[8]) MBR = RBUS;
 
     // PC
-    if (b[6]) PC = 0;
-    if (b[5]) PC = PC + 2;
-    if (b[4]) PC = ABUS;
+    if (b[6]) PC[13:0] = 0;
+    if (b[5]) PC[13:0] = PC[13:0] + 2;
+    if (b[4]) PC[13:0] = ABUS[13:0];
     
   end
 
-/* Example 2. register without clk
-  always @ (b or PC or IR or MBR) begin
-    if (b[21]) ABUS = PC;
-    if (b[20]) ABUS = IR;
-    if (b[19]) ABUS = MBR;
-  end
-*/
+
   always @ (b or AC or MBUS) begin
     
     // ALU
